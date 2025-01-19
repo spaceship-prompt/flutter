@@ -31,7 +31,13 @@ spaceship_flutter() {
 
   [[ -n "$is_flutter_project" &&  "$is_flutter_project" != "null" ]] || return
 
-  local flutter_version_output=$(flutter --version | awk '/^Flutter/{print $0}')
+  if (( $+commands[fvm] )); then
+    local prefix=(fvm "")
+  else
+    local prefix=""
+  fi
+
+  local flutter_version_output=$(${prefix}flutter --version | awk '/^Flutter/{print $0}')
   local flutter_version=$(printf "$flutter_version_output" | awk '{print $2}')
   local flutter_channel=$(printf "$flutter_version_output" | awk '{print $5}')
   local flutter_channel_section="$(__spaceship_flutter_channel $flutter_channel)"
